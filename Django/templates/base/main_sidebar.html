@@ -1,0 +1,179 @@
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="/static/dist/img/user0-128x128.png" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>Admin</p>
+          <!-- Status -->
+          <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+        </div>
+      </div>
+
+      <!-- search form (Optional) -->
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+              <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+              </button>
+            </span>
+        </div>
+      </form>
+
+      <!-- /.search form -->
+
+      <!-- Sidebar Menu -->
+     <ul class="sidebar-menu tree" data-widget="tree">
+        <li class="header">主导航</li>
+{#        <li class="treeview">#}
+{#          <a href="#">#}
+{#            <i class="fa fa-dashboard"></i> <span>评分板</span>#}
+{#            <span class="pull-right-container">#}
+{#              <i class="fa fa-angle-left pull-right"></i>#}
+{#            </span>#}
+{#          </a>#}
+{#          <ul class="treeview-menu" style="display: none;">#}
+{#              <li><a href="/show_oracle_rate"><i class="fa fa-circle-o"></i>Oracle</a></li>#}
+{#              <li><a href="/show_mysql_rate"><i class="fa fa-circle-o"></i>MySQL</a></li>#}
+{#              <li><a href="/show_linux_rate"><i class="fa fa-circle-o"></i>Linux主机</a></li>#}
+{#          </ul>#}
+{#        </li>#}
+         <li><a href="/dashboard"><i class="fa fa-dashboard"></i><span>系统调试</span> </a> </li>
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-database"></i> <span>实时日志</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/log"><i class="fa fa-circle-o"></i>全局日志</a></li>
+            <!--<li><a href="/log_http"><i class="fa fa-circle-o"></i>HTTP日志</a></li>-->
+              <!--<li><a href="/log_tcp"><i class="fa fa-circle-o"></i>TCP日志</a></li>-->
+              <!--<li><a href="/log_udp"><i class="fa fa-circle-o"></i>UDP日志</a></li>-->
+              <!--<li><a href="/log_ip"><i class="fa fa-circle-o"></i>IP日志</a></li>-->
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-database"></i> <span>特征比较</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/upload"><i class="fa fa-circle-o"></i>上传</a></li>
+            <li><a href="/show_xx"><i class="fa fa-circle-o"></i>比较</a></li>
+          </ul>
+        </li>
+          <li class="treeview">
+          <a href="#">
+            <i class="fa fa-cubes"></i> <span>TCP插件</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/xx1_monitor"><i class="fa fa-circle-o"></i>实时监控</a></li>
+            <li><a href="/show_xx1"><i class="fa fa-circle-o"></i>概览</a></li>
+          </ul>
+        </li>
+            <li class="treeview">
+          <a href="#">
+            <i class="fa fa-linux"></i> <span>UDP插件</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/xx2_monitor"><i class="fa fa-circle-o"></i>实时监控</a></li>
+            <li><a href="/show_xx2"><i class="fa fa-circle-o"></i>概览</a></li>
+          </ul>
+        </li>
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-cubes"></i> <span>IP插件</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/xx1_monitor"><i class="fa fa-circle-o"></i>实时监控</a></li>
+            <li><a href="/show_xx1"><i class="fa fa-circle-o"></i>概览</a></li>
+          </ul>
+        </li>
+{#         <li>#}
+{#          <a href="/my_check">#}
+{#            <i class="fa fa-th"></i> <span>巡检</span>#}
+{#              <span class="pull-right-container">#}
+{#              <small class="label pull-right bg-green">new</small>#}
+{#            </span>#}
+{#          </a>#}
+{#        </li>#}
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-paper-plane"></i> <span>系统运维</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/my_tools"><i class="fa fa-circle-o"></i>工具包</a></li>
+            <li><a href="/my_scheduler"><i class="fa fa-circle-o"></i>任务编排</a></li>
+          </ul>
+        </li>
+{#          <li class="treeview">#}
+{#          <a href="#">#}
+{#            <i class="fa fa-gears"></i> <span>配置管理</span>#}
+{#            <span class="pull-right-container">#}
+{#              <i class="fa fa-angle-left pull-right"></i>#}
+{#            </span>#}
+{#          </a>#}
+{#          <ul class="treeview-menu">#}
+{#            <li><a href="/mon_servers"><i class="fa fa-circle-o"></i>监控设备</a></li>#}
+{#            <li><a href="/alarm_settings"><i class="fa fa-circle-o"></i>告警策略</a></li>#}
+{#          </ul>#}
+{#        </li>#}
+{#         <li class="treeview">#}
+{#          <a href="#">#}
+{#            <i class="fa fa-pencil-square-o"></i> <span>故障管理</span>#}
+{#            <span class="pull-right-container">#}
+{#              <i class="fa fa-angle-left pull-right"></i>#}
+{#            </span>#}
+{#          </a>#}
+{#          <ul class="treeview-menu">#}
+{#            <li><a href="/show_failure"><i class="fa fa-circle-o"></i>故障列表</a></li>#}
+{#            <li><a href="/failure_add"><i class="fa fa-circle-o"></i>新建故障记录</a></li>#}
+{#          </ul>#}
+{#        </li>#}
+{#         <li class="treeview">#}
+{#          <a href="#">#}
+{#            <i class="fa fa-book"></i> <span>文档资料库</span>#}
+{#            <span class="pull-right-container">#}
+{#              <i class="fa fa-angle-left pull-right"></i>#}
+{#            </span>#}
+{#          </a>#}
+{#          <ul class="treeview-menu">#}
+{#            <li><a href="/my_scripts"><i class="fa fa-circle-o"></i>常用脚本</a></li>#}
+{#            <li><a href="/blog_index"><i class="fa fa-circle-o"></i>DBA BLOG</a></li>#}
+{#          </ul>#}
+{#        </li>#}
+        <li class="header">消息列表</li>
+        <li><a href=/show_alarm><i class="fa fa-circle-o text-red"></i> <span>流量捕获</span></a></li>
+         <!--
+        <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>待办事项</span></a></li>
+        -->
+{#        <li><a href="/recorder"><i class="fa fa-circle-o text-aqua"></i> <span>事件记录</span></a></li>#}
+        <li><a href="/my_task"><i class="fa fa-circle-o text-green"></i> <span>任务管理器</span></a></li>
+      </ul>
+      <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+  </aside>

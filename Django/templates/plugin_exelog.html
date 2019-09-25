@@ -1,0 +1,32 @@
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+<section class="content-header">
+    <h1>
+        执行日志
+    </h1>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li><a href="#">自动化运维</a></li>
+        <li><a href="/my_tools">工具包</a></li>
+        <li><a href="/plugin_exec">插件执行</a></li>
+        <li class="active">日志查看</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="box-header">
+            <h3 class="box-title"><strong>{{ log_name }}</strong>日志</h3>
+        </div>
+        <div class="box-body">
+            {% for item in alist %}
+            <p>{{ item }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

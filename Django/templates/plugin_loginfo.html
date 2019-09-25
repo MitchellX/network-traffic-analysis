@@ -1,0 +1,44 @@
+{% extends 'base/base_site.html' %}
+{% block main_header %}
+  {% endblock %}
+  {% block main_sidebar %}
+  {% endblock %}
+
+{% block content_header %}
+<section class="content-header">
+    <h1>
+        日志记录
+    </h1>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="box-body">
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>日志信息</th>
+                    <th>异常信息</th>
+                    <th>时间</th>
+                </tr>
+                </thead>
+                {% for log in log_info %}
+                <tr>
+                    <td>{{ forloop.counter }} </td>
+                    <td>{{ log.log_info}} </td>
+                    <td style="color:red">{{ log.err_info}} </td>
+                    <td>{{ log.log_time}} </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="box-footer clearfix"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

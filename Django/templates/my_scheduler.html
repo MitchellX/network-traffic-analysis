@@ -1,0 +1,213 @@
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+<section class="content-header">
+    <h1>
+        任务编排
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li><a href="#">自动化运维</a></li>
+        <li class="active">任务编排</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="box-body">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#my_scheduler" data-toggle="tab" aria-expanded="false">定时任务</a></li>
+            <li class=""><a href="#crontab" data-toggle="tab" aria-expanded="false">Crontabs管理</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="active tab-pane" id="my_scheduler">
+                <div class="box-body" style="...">
+                    <table id="my_scheduler" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>任务名称</th>
+                            <th>资源类型</th>
+                            <th>设备标签</th>
+                            <th>任务模板</th>
+                            <th>参数</th>
+                            <th>执行时间</th>
+                            <th>到期时间</th>
+                            <th>是否启用</th>
+                            <th>上次执行时间</th>
+                            <th>运行总次数</th>
+                            <th>修改时间</th>
+                            <th style="width: 100px">操作</th>
+                        </tr>
+                        </thead>
+                        <!--数据库读取-->
+                    </table>
+                </div>
+                <div class="box-footer clearfix">
+                    <div class="pull-right">
+                        <a href="#">
+                            <button type="button" class="btn btn-primary btn-block btn-flat" onclick="return pop_scheduler_add()">新增</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="crontab">
+                <div class="box-body" style="...">
+                    <table id="crontab" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>crontab</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <!--数据库内容-->
+                    </table>
+                </div>
+                <div class="box-footer clearfix">
+                    <div class="pull-right">
+                        <a href="#">
+                            <button type="button" class="btn btn-primary btn-block btn-flat" onclick="return pop_crontab_add()">新增</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    function pop_scheduler_edit(n){
+    layer.open({
+    type: 2,
+    title: '修改任务配置',
+    closeBtn: 1,
+    area: ['700px', '550px'],
+    shadeClose: true, //点击遮罩关闭
+    content: ['/scheduler_edit?id='+n,],
+    end:function(){
+            var handle_status = $("#handle_status").val();
+            if ( handle_status == '1' ) {
+                layer.msg('保存成功！',{
+                    icon: 1,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            } else if ( handle_status == '2' ) {
+                layer.msg('修改失败！',{
+                    icon: 2,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            }
+        }
+  });
+}
+
+function pop_crontab_edit(n){
+    layer.open({
+    type: 2,
+    title: '修改crontab配置',
+    closeBtn: 1,
+    area: ['700px', '550px'],
+    shadeClose: true, //点击遮罩关闭
+    content: ['/crontab_edit?id='+n,],
+    end:function(){
+            var handle_status = $("#handle_status").val();
+            if ( handle_status == '1' ) {
+                layer.msg('保存成功！',{
+                    icon: 1,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            } else if ( handle_status == '2' ) {
+                layer.msg('修改失败！',{
+                    icon: 2,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            }
+        }
+  });
+}
+
+function pop_scheduler_para(n){
+    layer.open({
+    type: 2,
+    title: '任务配置参数',
+    closeBtn: 1,
+    area: ['550px', '200px'],
+    shadeClose: true, //点击遮罩关闭
+    content: ['/scheduler_para?id='+n,],
+  });
+}
+
+function pop_scheduler_add(){
+    layer.open({
+    type: 2,
+    title: '添加定时任务',
+    time: false,
+    closeBtn: 1,
+    area: ['700px', '550px'],
+    shadeClose: true, //点击遮罩关闭
+    content: ['/scheduler_add',],
+    end:function(){
+            var handle_status = $("#handle_status").val();
+            if ( handle_status == '1' ) {
+                layer.msg('添加成功！',{
+                    icon: 1,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            } else if ( handle_status == '2' ) {
+                layer.msg('添加失败！',{
+                    icon: 2,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            }
+        }
+  });
+}
+
+function pop_crontab_add(){
+    layer.open({
+    type: 2,
+    title: '添加crontab',
+    time: false,
+    closeBtn: 1,
+    area: ['700px', '550px'],
+    shadeClose: true, //点击遮罩关闭
+    content: ['/crontab_add',],
+    end:function(){
+            var handle_status = $("#handle_status").val();
+            if ( handle_status == '1' ) {
+                layer.msg('添加成功！',{
+                    icon: 1,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            } else if ( handle_status == '2' ) {
+                layer.msg('添加失败！',{
+                    icon: 2,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            }
+        }
+  });
+}
+
+</script>
+{% endblock %}

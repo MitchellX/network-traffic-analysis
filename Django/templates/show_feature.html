@@ -1,0 +1,170 @@
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分块上传</title>
+    <script type="/text/javascript">
+        (function ($, global, doc) {
+    var form = doc.forms["upload"];
+
+    // Upload类
+    function Upload (file) {
+        this.file = file;
+        this.fileInfo = {
+            fileName: this.file.name,
+            fileType: this.file.type,
+            fileSize: this.file.size
+        };
+
+        this.reader = new FileReader();
+        // 开始读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.同时,result属性中将包含所读取文件的原始二进制数据.
+        this.reader.readAsBinaryString(this.file);
+
+        // 块大小默认为4MB
+        this.opts = {
+            chunkSize: 4 * 1024 * 1024,
+            chunkIndex: 0
+        };
+        $.extend(this.opts, {
+            chunkCount: Math.ceil(this.fileInfo.fileSize / this.opts.chunkSize)
+        });
+
+        this.bindEvent();
+
+        return this;
+    };
+    Upload.prototype = {
+        bindEvent: function () {
+            var self = this;
+
+            self.reader.onloadstart = function () {
+                self.uploadChunk();
+            };
+
+            return self;
+        },
+        uploadFinish: function (data) {
+            var self = this;
+            var previewStr = '';
+
+            switch (self.fileInfo.fileType.substring(0, self.fileInfo.fileType.indexOf('/'))) {
+                case 'image':
+                                previewStr = '<img src="' + ('upload/' + data.url) + '">';
+                                $('.preview').html(previewStr);
+                                break;
+                case 'audio':
+                                previewStr = '<audio src="' + ('upload/' + data.url) + '" controls="controls"></audio>';
+                                break;
+
+                default:
+                                $('.preview').html(previewStr);
+            }
+
+            return self;
+        },
+        updateProcess: function () {
+
+
+            return this;
+        },
+        uploadChunkAfter: function (data) {
+            var self = this;
+
+            self.opts.chunkIndex++;
+            if (self.opts.chunkIndex < self.opts.chunkCount) {
+                self.uploadChunk();
+            } else {
+                self.uploadFinish(data);
+            }
+
+            updateProcess();
+
+            return self;
+        },
+        uploadChunk: function () {
+            var fData = new FormData();
+            var self = this;
+
+            fData.append("file", self.file.slice(self.opts.chunkIndex * self.opts.chunkSize, self.opts.chunkSize * (self.opts.chunkIndex + 1)));
+            fData.append("fileName", self.fileInfo.fileName);
+            fData.append("fileSize", self.fileInfo.fileSize);
+            fData.append("fileType", self.fileInfo.fileType);
+            fData.append("chunkCount", self.opts.chunkCount);
+            fData.append("chunkIndex", self.opts.chunkIndex);
+            fData.append("trueName", self.fileInfo.fileName.substring(0, self.fileInfo.fileName.lastIndexOf('.')));
+            $.ajax({
+                url: 'controller/upload.php',
+                type: 'POST',
+                data: fData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "json",
+                success: function (data) {
+                    self.uploadChunkAfter(data);
+                }
+            });
+
+            return self;
+        },
+        util: function () {
+            return {
+                // 字节转换成对应的单位
+                bytesTosize: function (data) {
+                    var unit = ["Bytes", "KB", "MB", "GB"];
+                    var i = parseInt(Math.log(data) / Math.log(1024));
+                    return (data / Math.pow(1024, i)).toFixed(1) + " " + unit[i];
+                },
+                // 秒转换成对应的时间
+                secondsTotime: function (sec) {
+                    var h = Math.floor(sec / 3600),
+                        m = Math.floor((sec - h * 3600) / 60),
+                        s = Math.floor(sec - h * 3600 - m * 60);
+                    if(h < 10) h = "0" + h;
+                    if(m < 10) m = "0" + m;
+                    if(s < 10) s = "0" + s;
+
+                    return h + ":" + m + ":" + s;
+                }
+            }
+        }
+    };
+
+    $('#submit').on('click', function () {
+        var File = new Upload(form["file"].files[0]);
+
+        return false;
+    });
+})(jQuery, window, document);
+    </script>
+</head>
+
+<body>
+    <form name="upload" action="" enctype="multipart/form-data" method="post">
+        <input type="file" id="file" name="file">
+        <input type="button" id="submit" value="提交">
+    </form>
+    <div class="preview"></div>
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/upload.js"></script>
+</body>
+</html>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

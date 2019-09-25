@@ -1,0 +1,272 @@
+{% extends 'base/base_site.html' %}
+
+{% block style %}
+<style>
+    .table tr th {
+    font-size: 13px;
+    }
+    .table tr td {
+    font-size: 13px;
+    }
+    [aria-controls="example1"] {
+    }
+
+    li{list-style: none;}/*这里设置*/
+</style>
+{% endblock %}
+
+{% block content_header %}
+<section class="content_header">
+    <h1>
+
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li class="active">控制中心</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="box box-solid" id="app">
+    <div class="box-body">
+        <button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="backup_all" v-on:click="backup_all" value="backup_all" class="btn bg-olive margin">
+            系统运行
+        </button>
+        <h3 style="margin: 20px;">运行结果:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><span v-bind:value="state" class="label label-[[ state ]]">{% if state == 'success' %} success {% else %} fail {% endif %}</span></small></h3>
+{#        <p><span class="label label-{{ state }}">{% if state == 'success' %} success {% else %} fail {% endif %}</span></p>#}
+
+        <div class="row clearfix">   <!--这是让那三个区域变成了一块-->
+        <div class="col-md-4">
+            <div class="box-body chart-responsive">
+                <div id="messagecontainer" style="margin: 20px;"></div>
+                <hr/>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="box-body chart-responsive">
+                <div id="gdb-test" style="height: 300px; ">
+                    <a href="/haha/">
+                        <label><input type="checkbox" value="" id="is_gdb"/>  GDB模式 </label>
+                    </a>
+
+                    <input type="text" id="gdb_command" placeholder="gdb命令">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="box-body chart-responsive">
+                <div id="result">
+                    <p>调试结果</p>
+                    <div id="messagerusult" style="..."></div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+
+        <section class="col-lg-7 connectedSortable ui-sortable">
+            <div class="nav-tabs-custom" style="...">
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class=""><a href="#msg" data-toggle="tab" aria-expanded="true">实时流量捕获({{ msg_num }})</a></li>
+                    <!--<li class="active"><a href="#msg-chart" data-toggle="tab" aria-expanded="false">月度告警分布</a></li>-->
+                    <li class="pull-left header"><i class="fa fa-warning"></i>流量概览</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <div class="chart tab-pane active" id="msg-chart">
+                        <div class="chart" id="alarm-chart" style="..."></div>
+                    </div>
+                    <div class="chart tab-pane" id="msg">
+                        <div class="box-body chart-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+               <!--这里开始放实时流量捕获-->                     <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix no-border">
+                <!--now是此刻的时间-->            <span class="pull-right text-muted">{{ now }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-lg-5 connectedSortable ui-sortable">
+            <div class="nav-tabs-custom" style="...">
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+{#                    <li class=""><a href="#disk" data-toggle="tab" aria-expanded="false">磁盘</a></li>#}
+                    <li class=""><a href="#mem" data-toggle="tab" aria-expanded="false">内存</a></li>
+                    <li class="active"><a href="#cpu" data-toggle="tab" aria-expanded="true">CPU</a></li>
+                    <li class="pull-left header"><i class="fa fa-linux"></i>系统占用</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <div class="chart tab-pane active" id="cpu">
+                        <div class="box-body chart-reponsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <th>标签</th>
+                                    <th>主机名</th>
+                                    <th>百分比</th>
+                                </tr>
+              <!--这部分是数据库提取的内容-->
+                                <tr>
+                                    <td>[[ tag ]]</td>
+                                    <td :value="host">[[ host ]]</td>
+                                    <td><span class="badge bg-green">[[ cpu_per ]]</span> </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix no-border">
+                            <span class="pull-right text-muted">{{ now }}</span>
+                        </div>
+                    </div>
+                    <div class="chart tab-pane" id="mem">
+                        <div class="box-body chart-reponsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <th>标签</th>
+                                    <th>主机名</th>
+                                    <th>百分比</th>
+                                </tr>
+              <!--这部分是数据库提取的内容-->
+                                {% verbatim %}
+                                <tr>
+                                    <td>[[ tag ]]</td>
+                                    <td>[[ host ]]</td>
+                                    <td><span class="badge bg-green">[[ mem_per ]]</span> </td>
+                                </tr>
+                                {% endverbatim %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix no-border">
+                            <span class="pull-right text-muted">{{ now }}</span>
+                        </div>
+                    </div>
+{#                    <div class="chart tab-pane" id="disk">#}
+{#                        <div class="box-body chart-reponsive">#}
+{#                            <table class="table table-striped">#}
+{#                                <tbody>#}
+{#                                <tr>#}
+{#                                    <th>标签</th>#}
+{#                                    <th>主机名</th>#}
+{#                                    <th>目录</th>#}
+{#                                    <th>百分比</th>#}
+{#                                </tr>#}
+{#               <!--这部分是数据库提取的内容-->#}
+{#                                </tbody>#}
+{#                            </table>#}
+{#                        </div>#}
+{#                        <div class="box-footer clearfix no-border">#}
+{#                            <span class="pull-right text-muted">{{ now }}</span>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <script type="text/javascript">
+    var data={
+        state: '',
+        tag:   null,
+        host:  '',
+        cpu_per: '',
+        mem_per: '',
+        title_test: '运行结果'
+    }
+    new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: data,
+        methods: {
+            backup_all: function () {
+                $('#messagecontainer').empty();
+                var socket=new WebSocket("ws://"+window.location.host+"/echo_once/");
+                console.log("echo_once output.");
+                console.log(socket);
+                console.log("ok");
+                socket.onopen=function () {
+                    console.log('WebSocket open'); //成功连接上Websocket
+                    socket.send($('#backup_all').val()); //发送数据到服务端
+                };
+                socket.onmessage=function (e) {
+                    {#console.log('message:'+e.data);  //打印服务端返回的数据#}
+                    if (e.data.startsWith("finalres_")) {
+                        state_dict = e.data.substr(9)
+                        state_dict = JSON.parse(state_dict)
+                        console.log(state_dict)
+
+                        Vue.set(data,'host',state_dict.host);
+                        Vue.set(data,'state',state_dict.state);
+                        Vue.set(data,'tag',state_dict.tag);
+                        Vue.set(data,'cpu_per',state_dict.cpu_per);
+                        Vue.set(data,'mem_per',state_dict.mem_per);
+
+                    } else {
+                        $('#messagecontainer').append(e.data+'<br/>');
+                    }
+                };
+            },
+
+        }
+    })
+        {#$(function () {#}
+        {#    $('#backup_all').click(function () {#}
+        {#        $('#messagecontainer').empty();#}
+        {#        var socket=new WebSocket("ws://"+window.location.host+"/echo_once/");#}
+        {#        console.log("echo_once output.");#}
+        {#        console.log(socket);#}
+        {#        console.log("ok");#}
+        {#        socket.onopen=function () {#}
+        {#            console.log('WebSocket open'); //成功连接上Websocket#}
+        {#            socket.send($('#backup_all').val()); //发送数据到服务端#}
+        {#        };#}
+        {#        socket.onmessage=function (e) {#}
+        {#            console.log('message:'+e.data);  //打印服务端返回的数据#}
+        {#            if (e.data.startsWith("finalres_")) {#}
+        {#                state_dict = e.data.substr(9)#}
+        {#                state_dict = JSON.parse(state_dict)#}
+        {##}
+        {#            } else {#}
+        {#                $('#messagecontainer').append(e.data+'<br/>');#}
+        {#            }#}
+        {#        };#}
+        {#    });});#}
+        $(function () {
+            $('#gdb_command').change(function () {
+                $('#messagerusult').empty();
+                var socket=new WebSocket("ws://"+window.location.host+"/gdb_command/");
+                console.log(socket);
+                socket.onopen=function () {
+                    console.log('WebSocket open');
+                    socket.send($('#gdb_command').val());  //把命令传到服务端
+                };
+                socket.onmessage=function (e) {
+                    console.log('message:'+e.data);
+                    $('#messagerusult').append(e.data+'<br/>');
+                }
+            });
+        });
+
+
+    </script>
+{% endblock %}

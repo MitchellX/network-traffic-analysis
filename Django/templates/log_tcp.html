@@ -1,0 +1,137 @@
+{% extends 'base/base_site.html' %}
+
+{% block css %}
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+{#<section class="wrapper site-min-height">#}
+    <section>
+    <h3><i class="fa fa-angle-right"></i>实时日志 <i class="fa fa-desktop"></i></h3>
+    <div class="row mt">
+        <div class="form-panel">
+            <div class="col-lg-12 row mt">
+                <div class="col-sm-6">
+                    <h4 class="mb" style="float:left;dispaly:block;">实时日志</h4>
+                </div>
+                <div class="col-sm-6">
+                        <button type="button" class="btn btn-theme02" style="float:right" onclick="cleartable()"> 清空日志</button>
+                        <input type="checkbox" onchange="isCheck(this)" style="float:left" data-toggle="switch">
+                </div>
+            </div>
+            <div>
+                <table id="logtable" class="table-striped dataTable table-advance table-hover" style="word-break:break-all;">
+                    <thead>
+                        <tr>
+                            <th style="width:25%;">时间</th>
+                            <th style="width:15%;">名字</th>
+                            <th>内容</th>
+                        </tr>
+                    </thead>
+                    <tbody id="log">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function () {
+        //动态响应表格的控制
+        $('#logtable').DataTable({ //table的id
+            "scrollY":"670px", //滚动条
+            "scrollCollapse":true,
+            'columnDefs':[{
+                'targets':[1,2], //除时间列以外都不排序
+                'orderable':false
+            }],
+            "order":[[0,'desc']],
+            "paging":false,  //禁止分页
+            "bInfo":false,   //页脚信息
+            "oLanguage":{
+                "sZeroRecords": "打开按钮可以开始接收日志,日志默认为时间降序排列",
+                "sSearch": "日志过滤：",
+            },
+        });
+    });
+
+    //客户端websocket
+    var socket;
+    function init() {
+        var host="ws://127.0.0.1:8080/"    //不需要处理函数
+        try{
+            // 建立一个websocket
+            socket = new WebSocket(host);
+            // 打开websocket
+            socket.onopen = function(){
+                console.log('Connected');
+                {#server_tag = $('.logo').text();#}
+                {#socket.send(server_tag);#}
+                socket.send('server1')
+            };
+
+            // 监听接收服务端的消息
+            socket.onmessage = function(msg){
+                // 如果收到服务端的Bye，关闭客户端的
+                console.log('recieve');
+                if(eval(msg.data) == 'Bye'){
+                    socket.close();
+                    socket = null;
+
+                    return ;
+                }
+                var table = $('#logtable').DataTable();
+                var log = eval("("+msg.data+")");
+                {##}
+                {#console.log(log.length);#}
+                {#console.log(log[0][0]);#}
+                {#console.log(log[0][1]);#}
+                {#console.log(log[0][2]);#}
+                {#console.log(typeof(log));#}
+                for(i=0; i<log.length; ++i){
+                    var logtime = log[i][0];
+                    var logname = log[i][1];
+                    var logcontent = log[i][2];
+                    table.row.add([logtime,logname,logcontent]).draw(true);
+                }
+            }
+            // websocket关闭
+            socket.onclose = function(e){
+                console.log('Lose Connection!',e);
+            }
+            socket.onerror = function (evt) {
+                //产生异常
+                console.log('error：',evt);
+            }
+        }catch(ex){
+            console(ex);
+        }
+    }
+
+    //选中单选框时
+    function isCheck(obj) {
+        if($(obj).prop("checked")){
+            init();  //建立连接
+        }else {
+            //客户端发起关闭连接请求
+            socket.send('quit');
+            //清空表格
+            var table=$('#logtable').DataTable().clear().draw();
+        }
+    }
+
+    //点击清空日志时
+    function cleartable() {
+        var table=$('#logtable').DataTable().clear().draw();
+    }
+</script>
+    <script src="/static/bootstrap-switch.js"></script>
+    <!--custom tagsinput-->
+    <script src="/static/jquery.tagsinput.js"></script>
+    <!--custom checkbox & radio-->
+    <script src="/static/js/form-component.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+<section class="content-header">
+    <h1>
+        选择图片
+        <!--<small>系统、主机层面</small>-->
+    </h1>
+</section>
+<table>
+    <tr>
+        <td colspan="2" align="center">上传照片</td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="center">
+            <img src="" style="width:800px;height: 300px" id="img_driver">
+            <!--路径src放一张 纯白的图片-->
+        </td>
+    </tr>
+
+    <tr>
+        <td align="center">
+            <button type="button" class="btn btn-block btn-primary btn-xs" onclick="driverUpload();"><i class="fa fa-cloud-upload"></i> 上传</button>
+        </td>
+        <td align="center">
+            <button type="button" class="btn btn-block btn-primary btn-xs"><i class="fa fa-trash"></i> 删除</button>
+        </td>
+    </tr>
+</table>
+<input type="file" id="input_upload_driver" style="display: none" accept="image/jpg, image/png, image/jpeg"  onChange="preview(this,'img_driver');">
+
+<table>
+    <tr>
+        <td colspan="2" align="center">上传照片</td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="center">
+            <img src="" style="width:800px;height: 300px" id="img_driver2">
+        </td>
+    </tr>
+
+    <tr>
+        <td align="center">
+            <button type="button" class="btn btn-block btn-primary btn-xs" onclick="driverUpload2();"><i class="fa fa-cloud-upload"></i> 上传</button>
+        </td>
+        <td align="center">
+            <button type="button" class="btn btn-block btn-primary btn-xs"><i class="fa fa-trash"></i> 删除</button>
+        </td>
+    </tr>
+</table>
+<input type="file" id="input_upload_driver2" style="display: none" accept="image/jpg, image/png, image/jpeg"  onChange="preview(this,'img_driver2');">
+
+
+<!--<table class="table table-bordered text-center">-->
+
+
+    <!--<tbody>-->
+        <!--<input type="file" id="file2" name="file2"/>-->
+            <!--<div id="result2"></div>-->
+            <!--<div>-->
+                <!--&lt;!&ndash;<img src="1.jpg">&ndash;&gt;-->
+            <!--</div>-->
+
+    <!--</tbody>-->
+    <!--<tbody>-->
+        <!--<input type="file" id="file" name="file"/>-->
+            <!--<div id="result"></div>-->
+            <!--<div>-->
+                <!--&lt;!&ndash;<img src="1.jpg">&ndash;&gt;-->
+            <!--</div>-->
+
+    <!--</tbody>-->
+
+
+
+
+    <!--&lt;!&ndash;<tbody>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div id="topicpics" class="topic-pics">&ndash;&gt;-->
+            <!--&lt;!&ndash;<ul>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li id="tdAdd">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="imgwrap" id="btnAdd">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<img src="../imgs/topic_pic_add.png">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<input  type="file" id="file_input" multiple />&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<a href="/log_collect"><button type="button" class="btn bg-olive margin">submit</button></a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="/easy_start"><button type="button" class="btn bg-olive margin">一键重启</button></a>&ndash;&gt;-->
+    <!--&lt;!&ndash;</tbody>&ndash;&gt;-->
+<!--</table>-->
+
+
+
+
+        <!--&lt;!&ndash;<script type="text/javascript">&ndash;&gt;-->
+            <!--&lt;!&ndash;function ProcessFile(e) {&ndash;&gt;-->
+                <!--&lt;!&ndash;var file2 = document.getElementById('file2').files[0];&ndash;&gt;-->
+                <!--&lt;!&ndash;if (file2) {&ndash;&gt;-->
+                    <!--&lt;!&ndash;var reader = new FileReader();&ndash;&gt;-->
+                    <!--&lt;!&ndash;reader.onload = function (event) {&ndash;&gt;-->
+                        <!--&lt;!&ndash;var txt = event.target.result;&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;var img = document.createElement("img");&ndash;&gt;-->
+                        <!--&lt;!&ndash;img.src = txt;//将图片base64字符串赋值给img的src&ndash;&gt;-->
+                       <!--&lt;!&ndash;// console.log(txt);&ndash;&gt;-->
+                        <!--&lt;!&ndash;document.getElementById("result2").appendChild(img);&ndash;&gt;-->
+                    <!--&lt;!&ndash;};&ndash;&gt;-->
+                <!--&lt;!&ndash;}&ndash;&gt;-->
+                <!--&lt;!&ndash;reader.readAsDataURL(file2);&ndash;&gt;-->
+            <!--&lt;!&ndash;}&ndash;&gt;-->
+
+            <!--&lt;!&ndash;function contentLoaded() {&ndash;&gt;-->
+                <!--&lt;!&ndash;document.getElementById('file2').addEventListener('change',&ndash;&gt;-->
+                    <!--&lt;!&ndash;ProcessFile, false);&ndash;&gt;-->
+            <!--&lt;!&ndash;}&ndash;&gt;-->
+            <!--&lt;!&ndash;window.addEventListener("DOMContentLoaded", contentLoaded, false);&ndash;&gt;-->
+        <!--&lt;!&ndash;</script>&ndash;&gt;-->
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+            function driverUpload() {
+    $('#input_upload_driver').click(); // 模拟文件上传按钮点击操作
+}
+
+function driverUpload2() {
+    $('#input_upload_driver2').click(); // 模拟文件上传按钮点击操作
+}
+
+
+var preview = function(file, container){
+    //缩略图类定义
+    var Picture  = function(file, container){
+        var height = 0,
+            width  = 0,
+            ext    = '',
+            size   = 0,
+            name   = '',
+            path   =  '';
+        var self   = this;
+        if(file){
+            name = file.value;
+            if(window.navigator.userAgent.indexOf("MSIE")>=1){
+                file.select();
+                path = document.selection.createRange().text;
+            }else {
+                if(file.files){
+                    // path =  file.files.item(0).getAsDataURL(); // firefox7.0之后该方法弃用了，用下面那个
+                    path = window.URL.createObjectURL(file.files[0]);
+                }else{
+                    path = file.value;
+                }
+            }
+        }else{
+            throw '无效的文件';
+        }
+        ext = name.substr(name.lastIndexOf("."), name.length);
+        if(container.tagName.toLowerCase() != 'img'){
+            throw '不是一个有效的图片容器';
+            container.visibility = 'hidden';
+        }
+        container.src = path;
+        container.alt = name;
+        container.style.visibility = 'visible';
+        height = container.height;
+        width  = container.width;
+        size   = container.fileSize;
+        this.get = function(name){
+            return self[name];
+        };
+        this.isValid = function(){
+            if(allowExt.indexOf(self.ext) !== -1){
+                throw '不允许上传该文件类型';
+                return false;
+            }
+        }
+    };
+
+    try{
+        var pic =  new Picture(file, document.getElementById('' + container));
+    }catch(e){
+        alert(e);
+    }
+};
+
+var preview2 = function(file, container){
+    //缩略图类定义
+    var Picture  = function(file, container){
+        var height = 0,
+            width  = 0,
+            ext    = '',
+            size   = 0,
+            name   = '',
+            path   =  '';
+        var self   = this;
+        if(file){
+            name = file.value;
+            if(window.navigator.userAgent.indexOf("MSIE")>=1){
+                file.select();
+                path = document.selection.createRange().text;
+            }else {
+                if(file.files){
+                    // path =  file.files.item(0).getAsDataURL(); // firefox7.0之后该方法弃用了，用下面那个
+                    path = window.URL.createObjectURL(file.files[0]);
+                }else{
+                    path = file.value;
+                }
+            }
+        }else{
+            throw '无效的文件';
+        }
+        ext = name.substr(name.lastIndexOf("."), name.length);
+        if(container.tagName.toLowerCase() != 'img'){
+            throw '不是一个有效的图片容器';
+            container.visibility = 'hidden';
+        }
+        container.src = path;
+        container.alt = name;
+        container.style.visibility = 'visible';
+        height = container.height;
+        width  = container.width;
+        size   = container.fileSize;
+        this.get = function(name){
+            return self[name];
+        };
+        this.isValid = function(){
+            if(allowExt.indexOf(self.ext) !== -1){
+                throw '不允许上传该文件类型';
+                return false;
+            }
+        }
+    };
+
+    try{
+        var pic =  new Picture(file, document.getElementById('' + container));
+    }catch(e){
+        alert(e);
+    }
+};
+        </script>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+<section class="content-header">
+    <h1>
+        系统运维
+        <small>系统、主机层面</small>
+    </h1>
+</section>
+
+<table class="table table-bordered text-center">
+    <tbody>
+        <a href="/log_collect"><button type="button" class="btn bg-olive margin">日志采集</button></a>
+        <a href="/easy_start"><button type="button" class="btn bg-olive margin">一键重启</button></a>
+    </tbody>
+</table>
+
+<section class="content-header">
+    <h1>
+        辅助工具
+    </h1>
+</section>
+
+<table class="table table-bordered text-center">
+    <tbody>
+        <a href="/plugin_ctl"><button type="button" class="btn bg-olive margin">操作面板</button></a>
+        <a href="/plugin_exec"><button type="button" class="btn bg-olive margin">上线工具</button></a>
+    </tbody>
+</table>
+
+{% endblock %}
+

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+<html lang="en">
+<head>
+<script src="/static/js/jquery-1.11.0.min.js"></script>
+<!--<script type="text/javascript">-->
+<!--$(function () {-->
+    <!--$('#backup_all').click(function () {-->
+         <!--console.log(typeof(WebSocket));-->
+         <!--console.log('hi');-->
+         <!--var socket=new WebSocket("ws://"+window.location.host+"/feature_test");-->
+         <!--console.log(socket);-->
+         <!--socket.onopen=function () {-->
+            <!--console.log('WebSocket open');-->
+            <!--socket.send($('#gdb_command').val());  //把命令传到服务端-->
+         <!--};-->
+         <!--&lt;!&ndash;$('#test_result').load("/home/mingcanxiang/pyCode/code_intern/temp_pic/example.png");&ndash;&gt;-->
+
+    <!--});-->
+<!--});-->
+
+<!--</script>-->
+
+</head>
+
+<body>
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1>Feature 测试</h1><br>
+        <!--请输入测试执行人：<input type="text" name="people"><br>-->
+        <!--请输入测试 版本 &nbsp;：<input type="text" name="version"><br>-->
+
+        请上传要测试的json文件：<br>
+        <input type="file" name="myfile"><br>
+        <input type="submit" value="上传"/>
+        <button style="margin: 20px;height: 40px;background-color/home/mingcanxiang/pyCode/code_intern/temp_pic/example.png: #00ff00;" type="button" id="backup_all" value="backup_all" onclick="location='/feature_test/'">
+                    <!--<button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="backup_all" v-on:click="backup_all" value="backup_all" class="btn bg-olive margin">-->
+        <!--<button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="backup_all" >-->
+            测试运行
+        </button>
+
+        <!--<tbody>-->
+            <!--<input type="file" id="file" name="file"/>-->
+                <!--<div id="result"></div>-->
+                <!--<div>-->
+                    <!--&lt;!&ndash;<img src="1.jpg">&ndash;&gt;-->
+                <!--</div>-->
+
+        <!--</tbody>-->
+
+        
+
+<input type="button" value="显示图片" id="bt" onclick="show();"/>
+    </form>
+
+    <br>
+<img src="" alt="" id="im"/>
+    <script type="text/javascript">
+            function ProcessFile(e) {
+                var file = document.getElementById('file').files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var txt = event.target.result;
+
+                        var img = document.createElement("img");
+                        img.src = txt;//将图片base64字符串赋值给img的src
+                       // console.log(txt);
+                        document.getElementById("result").appendChild(img);
+                    };
+                }
+                reader.readAsDataURL(file);}
+
+            function contentLoaded() {
+                document.getElementById('file').addEventListener('change',
+                    ProcessFile, false);
+            }
+            window.addEventListener("DOMContentLoaded", contentLoaded, false);
+
+    var btObject = document.getElementById("bt");
+    //为按钮注册点击事件,添加事件处理函数
+    function show() {
+        //根据id获取图片标签,设置图片的src属性值
+        console.log('hi')
+        var imObject = document.getElementById("im");
+        imObject.src = "/static/img/example_xmc.png";
+        //设置图片大小
+        imObject.width = "1000";
+        imObject.height = "350";
+    };
+
+    </script>
+
+{% endblock %}
+

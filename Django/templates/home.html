@@ -1,0 +1,510 @@
+{% extends 'base/base_site.html' %}
+
+{% block style %}
+<style>
+    .table tr th{
+        font-size: 13px;
+    }
+    .table tr td{
+        font-size: 13px;
+    }
+    [aria-controls="example1"]{}
+    li{list-style: none;}  /*li style在这里设置*/
+</style>
+{% endblock %}
+
+{% block content_header %}
+<section class="content-header">
+    <h1>
+        平台运行
+    <button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="sys_on" onclick="" value="sys_on" class="btn bg-olive margin">
+            系统运行
+    </button>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/home"><i class="fa fa-dashboard"></i>首页</a> </li>
+        <li class="active">平台运行</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="col-md-3">
+            <div class="box-body chart-reponsive">
+                <div class="chart" id="http-chart" style="height: 300px; "></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box-body chart-responsive">
+              <div class="chart" id="tcp-chart" style="height: 300px; "></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box-body chart-responsive">
+              <div class="chart" id="udp-chart" style="height: 300px; "></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box-body chart-responsive">
+              <div class="chart" id="ip-chart" style="height: 300px; "></div>
+            </div>
+        </div>
+        <section class="col-lg-7 connectedSortable ui-sortable-handle">
+            <div class="nav-tabs-custom" style="...">
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class=""><a href="#msg" data-toggle="tab" aria-expanded="true">实时告警({{ msg_num }})</a></li>
+                    <li class="active"><a href="#msg-chart" data-toggle="tab" aria-expanded="false">月度告警分布</a></li>
+                    <li class="pull-left header"><i class="fa fa-warning"></i>告警概览</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <div class="chart tab-pane active" id="msg-chart">
+                        <div class="chart" id="alarm-chart" style="..."></div>
+                    </div>
+                    <div class="chart tab-pane active" id="msg">
+                        <div class="box-body chart-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                {% for message in messageinfo_list %}
+                                <tr>
+                                    <td>
+                                        {{ message.alarm_header }}
+                                        <small class="label label-danger"><i class="fa fa-clock-o">{{ tim_last }} min</i> </small>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix no-border">
+                            <span class="pull-right text-muted">{{ now }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="col-lg-5 connectedSortable ui-sortable-handle">
+            <div class="nav-tabs-custom" style="...">
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class=""><a href="#mem" data-toggle="tab" aria-expanded="false">内存</a></li>
+                    <li class="active"><a href="#cpu" data-toggle="tab" aria-expanded="true">CPU</a></li>
+                    <li class="pull-left header"><i class="fa fa-linux"></i>系统占用</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <div class="chart tab-pane active" id="cpu">
+                        <div class="box-body chart-reponsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <th>标签</th>
+                                    <th>主机名</th>
+                                    <th>百分比</th>
+                                </tr>
+              <!--这部分是数据库提取的内容-->
+                                <tr>
+                                    <td>[[ tag ]]</td>
+                                    <td :value="host">[[ host ]]</td>
+                                    <td><span class="badge bg-green">[[ cpu_per ]]</span> </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix no-border">
+                            <span class="pull-right text-muted">{{ now }}</span>
+                        </div>
+                    </div>
+                    <div class="chart tab-pane" id="mem">
+                        <div class="box-body chart-reponsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <th>标签</th>
+                                    <th>主机名</th>
+                                    <th>百分比</th>
+                                </tr>
+              <!--这部分是数据库提取的内容-->
+                                {% verbatim %}
+                                <tr>
+                                    <td>[[ tag ]]</td>
+                                    <td>[[ host ]]</td>
+                                    <td><span class="badge bg-green">[[ mem_per ]]</span> </td>
+                                </tr>
+                                {% endverbatim %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix no-border">
+                            <span class="pull-right text-muted">{{ now }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // ########## 饼图1 ###########
+    var myChart_http=echarts.init(document.getElementById('http-chart')); //这个是通过id查找
+    // 指定图表的配置项和数据
+    var option_http={
+        title:{
+            text:'http协议',
+            x:'center' // 位置
+        },
+        tooltip:{
+            trigger:'item',
+            formatter:"{a} <br/> {b} : ({d}%)" //显示各个情况占比 在鼠标放上去的时候显示 ？？
+        },
+        legend:{
+            orient:'vertical',
+            left:'left',
+            data:['正常（{{ http_success_cnt }})','告警({{ http_warning_cnt }})','危险({{ http_danger_cnt }})']
+        },
+        series:[
+            {
+                name:'http情况',
+                type:'pie',
+                radius:'50%',
+                center:['50%','60%'],
+                data:[
+                    {value:{{ http_success_cnt }},name:'正常({{ http_siccess_cnt }})'},
+                    {value:{{ http_warning_cnt }}, name:'告警({{ http_warning_cnt }})'},
+                    {value:{{ http_danger_cnt }}, name:'危险({{ http_danger_cnt }})'}
+                ],
+                itemStyle:{
+                    emphasis:{
+                        shadowBlur:10,
+                        shadowOffsetX:0,
+                        shadowColor:'rgba(0,0,0,0.5)'
+                    }
+                },
+                color:[
+                    '#22d4bf',
+                    '#d4cda6',
+                    '#d45356',
+                ],
+            }
+        ]
+    };
+
+    setInterval(function () {
+        myChart_http.setOption(option_http,true);
+    },2000);
+
+    // 使用刚指定的配置项和数据显示饼图1
+    myChart_http.setOption(option_http);
+
+    // ########## 饼图2 #############
+    var myChart_tcp=echarts.init(document.getElementById('tcp-chart'));
+    // 指定图标的配置项和数据
+    var option_tcp={
+        title:{
+            text:'tcp协议',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['正常({{ tcp_seccess_cnt }})','告警({{ tcp_warning_cnt }})','危险({{ tcp_danger_cnt }})']
+        },
+        series : [
+            {
+                name: 'tcp情况',
+                type: 'pie',
+                radius : '50%',
+                center: ['50%', '60%'],
+                data:[
+                    {value:{{ tcp_seccess_cnt }}, name:'正常({{ tcp_seccess_cnt }})'},
+                    {value:{{ tcp_warning_cnt }}, name:'告警({{ tcp_warning_cnt }})'},
+                    {value:{{ tcp_danger_cnt }}, name:'危险({{ tcp_danger_cnt }})'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                color: [
+                    '#22d4bf',
+                    '#d4cda6',
+                    '#d45356',
+                ],
+            }
+        ]
+    };
+
+    setInterval(function () {
+        myChart_tcp.setOption(option_tcp,true);
+    },2000);
+
+    // 使用刚指定的配置项和数据显示图表
+    myChart_tcp.setOption(option_tcp);
+
+    // ############## 饼图三 ############
+    var myChart_udp = echarts.init(document.getElementById('udp-chart'));
+        // 指定图表的配置项和数据
+        var option_udp = {
+            title : {
+                text: 'udp协议',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['正常({{ udp_seccess_cnt }})','告警({{ udp_warning_cnt }})','危险({{ udp_danger_cnt }})']
+            },
+            series : [
+                {
+                    name: '服务情况',
+                    type: 'pie',
+                    radius : '50%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:{{ udp_seccess_cnt}}, name:'正常({{ udp_seccess_cnt }})'},
+                        {value:{{ udp_warning_cnt }}, name:'告警({{ udp_warning_cnt }})'},
+                        {value:{{ udp_danger_cnt }}, name:'危险({{ udp_danger_cnt }})'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    color: [
+                        '#22d4bf',
+                        '#d4cda6',
+                        '#d45356',
+                    ],
+                }
+            ]
+        };
+
+       setInterval(function () {
+           myChart_udp.setOption(option_udp, true);
+       },2000);
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart_udp.setOption(option_udp);
+
+
+        // ########### 饼图3 ##############
+        var myChart_ip=echarts.init(document.getElementById('ip-chart'));
+        // 指定图表的配置项和数据
+        var option_ip={
+            title : {
+                text: 'IP协议',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['正常({{ ip_seccess_cnt }})','告警({{ ip_warning_cnt }})','危险({{ ip_danger_cnt }})']
+            },
+            series:[{
+                name: '服务情况',
+                    type: 'pie',
+                    radius : '50%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:{{ ip_seccess_cnt}}, name:'正常({{ ip_seccess_cnt }})'},
+                        {value:{{ ip_warning_cnt }}, name:'告警({{ ip_warning_cnt }})'},
+                        {value:{{ ip_danger_cnt }}, name:'危险({{ ip_danger_cnt }})'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    color: [
+                        '#22d4bf',
+                        '#d4cda6',
+                        '#d45356',
+                    ],
+            }]
+
+        };
+
+        setInterval(function () {
+            myChart_ip.setOption(option_ip,true);
+        },2000);
+
+        // 使用刚指定的配置项和数据显示图表
+        myChart_ip.setOption(option_ip);
+
+        // ######### 告警预览里的泡泡图 ##########
+        var plantCap=[
+            {
+                name:'恶意流量1',
+                value:'{{ traffic_1 }}'
+            },
+            {
+                name:'恶意流量2',
+                value:'{{ traffic_2 }}'
+            },
+            {
+                name:'恶意流量3',
+                value:'{{ traffic_3 }}'
+            },
+            {
+                name:'恶意流量4',
+                value:'{{ traffic_4 }}'
+            },
+            {
+                name:'恶意流量5',
+                value:'{{ traffic_5 }}'
+            },
+            {
+                name:'恶意流量6',
+                value:'{{ traffic_6 }}'
+            },
+            {
+                name:'恶意流量7',
+                value:'{{ traffic_7 }}'
+            },
+            ];
+        var datalist=[{
+            offset:[56,48],
+            symbolSize: 120,
+            opacity: .95,
+            color: '#f467ce'
+        },{
+            offset: [35, 80],
+            symbolSize: 95,
+            opacity: .88,
+            color: '#7aabe2'
+        },{
+            offset: [20, 43],
+            symbolSize: 90,
+            opacity: .84,
+            color: '#ff7123'
+        },{
+            offset: [83, 30],
+            symbolSize: 90,
+            opacity: .8,
+            color: '#ffc400'
+        },{
+            offset: [36, 20],
+            symbolSize: 65,
+            opacity: .75,
+            color: '#5e333f'
+        },{
+            offset: [64, 10],
+            symbolSize: 70,
+            opacity: .7,
+            color: '#6b3442'
+        },{
+            offset: [75, 75],
+            symbolSize: 60,
+            opacity: .68,
+            color: '#8a3647'
+        },{
+            offset: [88, 62],
+            symbolSize: 50,
+            opacity: .6,
+            color: '#68333f'
+        }];
+
+        var datas=[];
+        for(var i=0;i<plantCap.length;i++){
+            var item=plantCap[i];
+            var itemToStyle=datalist[i];
+            datas.push({
+                name:item.value+'\n'+item.name,
+                value:itemToStyle.offset,
+                symbolSize:itemToStyle.symbolSize,
+                label:{
+                    normal:{
+                        textStyle:{
+                            fontSize:11
+                        }
+                    }
+                },
+                itemStyle:{
+                    normal: {
+                        color:itemToStyle.color,
+                        opacity:itemToStyle.opacity
+                    }
+                },
+            })
+        }
+        var myChart_alarm=echarts.init(document.getElementById('alarm-chart'));
+        // 指定图表的配置项和数据
+
+        var option_alarm={
+            grid: {
+                show: false,
+                top: 10,
+                bottom: 10
+            },
+            xAxis: [{
+                gridIndex: 0,
+                type: 'value',
+                show: false,
+                min: 0,
+                max: 100,
+                nameLocation: 'middle',
+                nameGap: 5
+            }],
+            yAxis: [{
+                gridIndex: 0,
+                min: 0,
+                show: false,
+                max: 100,
+                nameLocation: 'middle',
+                nameGap: 30
+            }],
+            series: [{
+                type: 'scatter',
+                symbol: 'circle',
+                symbolSize: 120,
+                label: {
+                    normal: {
+                        show: true,
+                        formatter: '{b}',
+                        color: '#fff',
+                        textStyle: {
+                            fontSize: '20'
+                        }
+                    },
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#00acea'
+                    }
+                },
+                data: datas
+            }]
+        };
+
+        setInterval(function () {
+            myChart_alarm.setOption(option_alarm,true);
+        },2000);
+
+        // 使用刚指定的配置项和数据显示图表
+        myChart_alarm.setOption(option_alarm);
+
+
+</script>
+{% endblock %}

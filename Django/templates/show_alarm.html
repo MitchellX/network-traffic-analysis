@@ -1,0 +1,42 @@
+{% extends 'base/base_site.html' %}
+{% block style %}
+<style>
+    .table tr th {
+    font-size: 12px;
+    }
+    .table tr td {
+    font-size: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content_header %}
+<section class="content-header">
+    <h1>
+        流量捕获
+    </h1>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li class="active">流量捕获</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="box box-primary">
+    <div class="box-body" style="...">
+        <table id="table1" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>tags</th>
+                <th>设备地址</th>
+                <th>流量类型</th>
+                <th>捕获时间</th>
+            </tr>
+            </thead>
+            <!--这里是数据库的内容-->
+        </table>
+    </div>
+</div>
+{% endblock %}

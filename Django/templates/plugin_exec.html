@@ -1,0 +1,118 @@
+{% extends 'base/base_site.html' %}
+
+{% block content_header %}
+<section class="content-header">
+    <h1>
+        平台上线工具
+    </h1>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li><a href="#">自动化运维</a></li>
+        <li><a href="/my_tools">工具包</a></li>
+        <li class="active">插件执行</li>
+    </ol>
+</section>
+    {% load static %}
+{% endblock %}
+
+{% block content %}
+<div class="box box-primary">
+    <div class="box-body">
+        <div class="box-header">
+            <h3 class="box-title">执行插件列表</h3>
+        </div>
+        <div class="box-body">
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>插件编号</th>
+                    <th>插件名</th>
+                    <th>执行操作</th>
+                    <th>运行结果</th>
+                    <th>执行日志</th>
+                </tr>
+                </thead>
+            <!--记得后端要把表给传到前端了-->
+                {% for plugin in plugin_list %} <!--因为这里是for循环入口 如果表里没有东西就不会进入 就不会有显示了-->
+                <tr>
+                    <td>{{ plugin.plugin_no }}</td>
+                    <td>{{ plugin.plugin_name }}</td>
+                    <td>
+                        <div class="btn-group" data-toggle="btn-toggle">
+
+                            <button class="btn btn-default btn-sm" type="submit" name="plugin" id="plugin" value={{ plugin.plugin_name }}><i class="fa fa-power-off text-red" title="{{ plugin.oper_type }}"></i> </button>
+
+                            <a href="/oracle_ctl?tags={{ oracle_ctl.tags }}&host={{ oracle_ctl.host }}&oper_type=restart">
+                                <button type="submit" class="btn btn-default btn-sm" name="restart" onclick="javascript:return control('restart');"><i class="fa fa-refresh text-blue" title="restart"></i> </button>
+                            </a>
+
+                        </div>
+                    </td>
+{#                    <td>{% if plugin.plugin_state == 1 %}成功 {% else %} 失败 {% endif %}</td>#}
+                    <td><span id="state" class="label label-primary"></span> </td>
+                    <td><a href="/plugin_exelog?log_name={{ plugin.plugin_name }}">查看</a> </td>
+                </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <span class="step-links">
+
+            </span>
+        </div>
+        <div class="form-group">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+            <input type="file" multiple="multiple" id="pluginfile" name="myfile">
+            <p class="help-block">上传插件</p>
+                <p>类型：<input type="radio" name="plugin_type" value="udp">udp
+                <input type="radio" name="plugin_type" value="tcp">tcp
+                <input type="radio" name="plugin_type" value="http">http
+                <input type="radio" name="plugin_type" value="ip">ip</p>
+            <input type="submit" value="提交" />
+            </form>
+{#            <div class="box-tools pull-right">#}
+{#                <li><a href="/plugin_loginfo?logtype={{ log_type }}" >查看执行日志</a></li>#}
+{#            </div>#}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{#    <script src="{% static 'jquery-1.12.4.js' %}"></script>#}
+<script>
+    function control(n) {
+        var msg="确定要"+n+"? \n\n请确认！";
+        if(confirm(msg)==true){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    $(function () {
+            {#$('#plugin').click(function () {#}
+            {#    var socket=new WebSocket("ws://"+window.location.host+"/plugin_test/");#}
+            {#    console.log(socket);#}
+            {#    socket.onopen=function () {#}
+            {#        console.log('WebSocket open'); //成功连接上Websocket#}
+            {#        socket.send($('#plugin').val());#}
+            {#    };#}
+            {##}
+            {#    socket.onmessage=function (e) {#}
+            {#        console.log('message:'+e.data);  //打印服务端返回的数据#}
+            {#        $('#messagecontainer').append(e.data+'<br/>');};});#}
+            $("#plugin").click(function (e) {
+                var url="/plugin_test/";
+                var plugin_name=$("#plugin").val();
+                $.get("/plugin_test",{'plugin_name':plugin_name},function (ret) {
+                    $("#state").html(ret)
+                })
+            });
+        });
+</script>
+{% endblock %}
