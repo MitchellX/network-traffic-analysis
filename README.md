@@ -25,7 +25,8 @@
 (3) 色情限制流量：(pornhub.com)等不再举例  
 (4) 僵木盗欺诈流量：(uestc.icu) 等不再举例  
 ![](./picture/svm.png)  
-如上图所示：采用的是SVM分类器
+如上图所示：采用的是SVM分类器  
+此外，在本项目中还实现了随机森林RandomForest、卷积神经网络CNN方法  
 # 前端展示
 采用的是Django框架。Django是一个免费、开源、高级的Python Web框架，采用MVT框架模式，能够最大化方便使用者的开发，使其专注于编写核心的应用程序，而不必被繁琐的框架模板等重复性工作所缠绕。
 ![](./picture/display.png)
