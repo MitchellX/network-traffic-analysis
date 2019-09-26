@@ -10,4 +10,5 @@
 利用思科软件joy 将pcap格式包转化为json格式，便于程序读取特征
 分析两种主要流特征数据包长度分布、数据包到达间隔分布，进行建模训练和展示
 ![](feature.png)
+<b>你可以点击display_video.mp4查看运行效果</b>
 ![](display.png)
