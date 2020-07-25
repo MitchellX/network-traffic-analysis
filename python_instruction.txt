@@ -1,0 +1,8 @@
+To use python, you should activate the python environment:
+conda activate
+
+To use pyTorch:
+conda activate pyTorch
+
+To see virtual environment list:
+conda env list
